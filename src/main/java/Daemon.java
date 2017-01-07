@@ -4,8 +4,8 @@
 public class Daemon {
 
     public static void main(String[] args){
-        Node node1 = new Node("127.0.0.1",8083);
-        node1.registerNode("node1");
+        Node node1 = new Node("127.0.0.1",8084);
+        node1.registerNode("node4");
     }
 }
 
