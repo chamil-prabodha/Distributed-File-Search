@@ -1,5 +1,9 @@
-import java.io.IOException;
-import java.net.DatagramPacket;
+import Message.AbstractResponse;
+import Message.MessageDecoder;
+import Message.MessageType;
+import Message.REGResponse;
+import Util.Neighbour;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -33,38 +37,46 @@ public class Node {
         String response = DSConnection.getConnection().connectToBootstrap(command,port);
 
         if(response !=null) {
-            StringTokenizer st = new StringTokenizer(response, " ");
+//            StringTokenizer st = new StringTokenizer(response, " ");
+//
+//            String length = st.nextToken();
+//            String rescode = st.nextToken();
+//
+//            String count = st.nextToken();
 
-            String length = st.nextToken();
-            String rescode = st.nextToken();
+            REGResponse res = (REGResponse)(MessageDecoder.decodeMessage(response));
 
-            String count = st.nextToken();
-
+            int length = res.getLength();
+            MessageType rescode = res.getType();
+            int count = res.getNo_nodes();
 //            System.out.println(Integer.parseInt(count));
 
-            if (count.equals("9999")) {
+            if (count == 9999) {
                 System.out.println("BOOTSTRAP: failed, there is some error in the command");
                 return false;
-            } else if (count.equals("9998")) {
+            } else if (count == 9998) {
                 System.out.println("BOOTSTRAP: failed, already registered to you, unregister first");
                 return false;
-            } else if (count.equals("9997")) {
+            } else if (count == 9997) {
                 System.out.println("BOOTSTRAP: failed, registered to another user, try a different IP and port");
                 return false;
-            } else if (count.equals("9996")) {
+            } else if (count == 9996) {
                 System.out.println("BOOTSTRAP: failed, can’t register. BS full");
                 return false;
             } else {
-                for(int i=0;i<Integer.parseInt(count);i++){
-                    String neighbour_ip = st.nextToken();
-                    int neighbour_port = Integer.parseInt(st.nextToken());
-                    neighbours.add(new Neighbour(neighbour_ip,neighbour_port));
-                    join(neighbour_ip,neighbour_port);
-                }
-
-//                for(int i=0;i<neighbours.size();i++){
-//                    System.out.println(neighbours.get(i).getIp()+" - "+neighbours.get(i).getPort());
+//                for(int i=0;i<Integer.parseInt(count);i++){
+//                    String neighbour_ip = st.nextToken();
+//                    int neighbour_port = Integer.parseInt(st.nextToken());
+//                    neighbours.add(new Neighbour(neighbour_ip,neighbour_port));
+//                    join(neighbour_ip,neighbour_port);
 //                }
+
+                neighbours = res.getNeighbours();
+
+                for(int i=0;i<neighbours.size();i++){
+                    Neighbour neighbour = neighbours.get(i);
+                    join(neighbour.getIp(),neighbour.getPort());
+                }
 
                 listen();
                 return true;

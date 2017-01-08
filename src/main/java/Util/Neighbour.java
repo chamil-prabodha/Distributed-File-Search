@@ -1,4 +1,6 @@
-class Neighbour {
+package Util;
+
+public class Neighbour {
 	private String ip;
 	private int port;
 
