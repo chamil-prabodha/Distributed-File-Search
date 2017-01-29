@@ -18,19 +18,19 @@ public class Node implements MessageListener{
 //    }
 
     public Node(String ip,int port){
-        DSConnection.init(ip,port,this);
+        DSRPCConnection.init(ip, port, this);
         neighbours = new ArrayList<Neighbour>();
 
     }
 
     public boolean registerNode(String username){
 
-        String ip = DSConnection.getConnection().getRawIp();
-        int port = DSConnection.getConnection().getPort();
+        String ip = DSRPCConnection.getConnection().getRawIp();
+        int port = DSRPCConnection.getConnection().getPort();
 
         String command = "REG "+ip+" "+port+" "+username;
 
-        String response = DSConnection.getConnection().connectToBootstrap(command,port);
+        String response = DSRPCConnection.getConnection().connectToBootstrap(command,port);
 
         if(response !=null) {
 //            StringTokenizer st = new StringTokenizer(response, " ");
@@ -88,25 +88,25 @@ public class Node implements MessageListener{
 
     private boolean unregisterNode(String username){
 
-        String ip = DSConnection.getConnection().getRawIp();
-        int port = DSConnection.getConnection().getPort();
+        String ip = DSRPCConnection.getConnection().getRawIp();
+        int port = DSRPCConnection.getConnection().getPort();
 
         String command = "UNREG "+ip+" "+port+" "+username;
-        DSConnection.getConnection().connectToBootstrap(command,port);
+        DSRPCConnection.getConnection().connectToBootstrap(command,port);
         return false;
     }
 
     private void join(String ip, int port){
 
-        String command = "JOIN "+DSConnection.getConnection().getRawIp()+" "+DSConnection.getConnection().getPort();
-        DSConnection.getConnection().Send(command,ip,port);
+        String command = "JOIN "+ DSRPCConnection.getConnection().getRawIp()+" "+ DSRPCConnection.getConnection().getPort();
+        DSRPCConnection.getConnection().Send(command,ip,port);
     }
 
     private void listen(){
-        String ip = DSConnection.getConnection().getRawIp();
-        int port = DSConnection.getConnection().getPort();
+        String ip = DSRPCConnection.getConnection().getRawIp();
+        int port = DSRPCConnection.getConnection().getPort();
 
-        DSConnection.getConnection().listen(ip,port);
+        DSRPCConnection.getConnection().listen(ip,port);
     }
 
     @Override
