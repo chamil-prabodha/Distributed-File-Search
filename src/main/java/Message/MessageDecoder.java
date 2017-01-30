@@ -15,7 +15,6 @@ public class MessageDecoder {
         String length = st.nextToken();
         String type = st.nextToken();
 
-
         MessageType t = MessageType.valueOf(type);
 
         switch (t){

@@ -1,7 +1,5 @@
 
 
-import Message.AbstractMessage;
-import Message.MessageDecoder;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -15,7 +13,6 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.TimeZone;
 import java.util.Vector;
 
 
@@ -61,7 +58,7 @@ public class DSRPCConnection extends AbstractConnection {
             Vector params = new Vector();
             params.add(0, command);
 
-            Object result = server.execute("sample.sum",params);
+            Object result = server.execute("RPCSupport.Join",params);
 
             String receivedata = (String) result;
 
@@ -79,7 +76,7 @@ public class DSRPCConnection extends AbstractConnection {
         XmlRpcServer xmlRpcServer = server.getXmlRpcServer();
         PropertyHandlerMapping mapping = new PropertyHandlerMapping();
         try {
-            mapping.addHandler("sample",sample.class);
+            mapping.addHandler("RPCSupport", RPCSupport.class);
             xmlRpcServer.setHandlerMapping(mapping);
             server.start();
         } catch (XmlRpcException e) {
