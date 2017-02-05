@@ -9,5 +9,9 @@ public enum MessageType {
     REGOK,
     UNROK,
     JOIN,
-    JOINOK
+    JOINOK,
+    SER,
+    SEROK,
+    LEAVE,
+    LEAVEOK
 }

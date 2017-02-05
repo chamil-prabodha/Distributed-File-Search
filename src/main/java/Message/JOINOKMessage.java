@@ -5,27 +5,22 @@ package Message;
  */
 public class JOINOKMessage extends AbstractMessage {
 
-    private int length = 0;
-    private MessageType type = null;
     private int value = 9999;
 
     public JOINOKMessage(int length, MessageType type, int value){
-        this.length = length;
-        this.type = type;
+        setLength(length);
+        setType(type);
         this.value = value;
     }
 
+    @Override
+    public String dump(){
+        StringBuilder stringBuilder = new StringBuilder(String.format("%0$-15s","[JOINOK]"));
+        stringBuilder.append(this.value);
+        return stringBuilder.toString();
+    }
     public int getValue(){
         return value;
     }
 
-    @Override
-    public int getLength() {
-        return length;
-    }
-
-    @Override
-    public MessageType getType() {
-        return type;
-    }
 }

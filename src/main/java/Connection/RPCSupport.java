@@ -1,3 +1,5 @@
+package Connection;
+
 import Message.AbstractMessage;
 import Message.MessageDecoder;
 
@@ -8,7 +10,7 @@ public class RPCSupport {
 
     public String Join(String command){
         AbstractMessage response = MessageDecoder.decodeMessage(command);
-        DSRPCConnection.getConnection().getListener().messageReceived(response);
+        RPCConnection.getConnection().getListener().messageReceived(response);
         return "JOINOK";
     }
 

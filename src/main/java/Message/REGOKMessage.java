@@ -9,14 +9,12 @@ import Util.Neighbour;
  */
 public class REGOKMessage extends AbstractMessage {
 
-    private int length = 0;
-    private MessageType type = null;
     private int no_nodes = 0;
     private List<Neighbour> neighbours = null;
 
     public REGOKMessage(int length, MessageType type, int no_nodes){
-        this.length = length;
-        this.type = type;
+        setLength(length);
+        setType(type);
         this.no_nodes = no_nodes;
         neighbours = new ArrayList<Neighbour>();
     }
@@ -26,21 +24,34 @@ public class REGOKMessage extends AbstractMessage {
         neighbours.add(neighbour);
     }
 
-    @Override
-    public int getLength() {
-        return length;
-    }
-
-    @Override
-    public MessageType getType() {
-        return type;
-    }
-
     public int getNo_nodes(){
         return no_nodes;
     }
 
     public List<Neighbour> getNeighbours(){
         return neighbours;
+    }
+
+    @Override
+    public String dump() {
+        StringBuilder stringBuilder = new StringBuilder(String.format("%0$-15s","[REGOK]"));
+        if(this.no_nodes==0) {
+            stringBuilder.append("Neighbours: empty");
+            return stringBuilder.toString();
+        }
+        else {
+            stringBuilder.append("Neighbours: ");
+
+            for (Neighbour n : neighbours) {
+                stringBuilder.append("(");
+                stringBuilder.append(n.getIp());
+                stringBuilder.append(",");
+                stringBuilder.append(n.getPort());
+                stringBuilder.append(")");
+                stringBuilder.append(" ");
+            }
+
+            return stringBuilder.toString();
+        }
     }
 }

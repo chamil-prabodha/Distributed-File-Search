@@ -1,4 +1,4 @@
-
+package Connection;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -6,7 +6,6 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcServer;
 import org.apache.xmlrpc.webserver.WebServer;
-
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -19,13 +18,15 @@ import java.util.Vector;
 /**
  * Created by Chamil Prabodha on 29/01/2017.
  */
-public class DSRPCConnection extends AbstractConnection {
+public class RPCConnection extends AbstractConnection {
 
-    private DSRPCConnection(){
+    int messageCount=0;
+
+    private RPCConnection(){
 
     }
 
-    public static void init(String ip, int port,MessageListener listener){
+    public static void init(String ip, int port, MessageListener listener){
         instance = getConnection();
         instance.ip = ip;
         instance.port = port;
@@ -37,17 +38,18 @@ public class DSRPCConnection extends AbstractConnection {
         }
     }
 
-    public static DSRPCConnection getConnection(){
+    public static RPCConnection getConnection(){
         if (instance == null)
-            instance = new DSRPCConnection();
+            instance = new RPCConnection();
 
-        return (DSRPCConnection)instance;
+        return (RPCConnection)instance;
     }
 
 
     @Override
     public void Send(String command, String ip, int port) {
-
+        messageCount++;
+        System.out.println("Meessage Count : "+messageCount);
         XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
         try {
             config.setServerURL(new URL("http://"+ip+":"+port));
@@ -58,7 +60,7 @@ public class DSRPCConnection extends AbstractConnection {
             Vector params = new Vector();
             params.add(0, command);
 
-            Object result = server.execute("RPCSupport.Join",params);
+            Object result = server.execute("NodeExecution.RPCSupport.Join",params);
 
             String receivedata = (String) result;
 
@@ -76,7 +78,7 @@ public class DSRPCConnection extends AbstractConnection {
         XmlRpcServer xmlRpcServer = server.getXmlRpcServer();
         PropertyHandlerMapping mapping = new PropertyHandlerMapping();
         try {
-            mapping.addHandler("RPCSupport", RPCSupport.class);
+            mapping.addHandler("NodeExecution.RPCSupport", RPCSupport.class);
             xmlRpcServer.setHandlerMapping(mapping);
             server.start();
         } catch (XmlRpcException e) {
